@@ -1,0 +1,32 @@
+version: "3.8"
+
+networks:
+  xdebug-docker.network:
+    driver: bridge
+
+services:
+  php:
+    build: ./docker/php
+    restart: always
+    tty: true
+    container_name: xdebug-docker.php
+    networks:
+      - xdebug-docker.network
+    ports:
+      - "9000:9000"
+    volumes:
+      - .:/var/www/app
+
+  nginx:
+    build: ./docker/nginx
+    container_name: xdebug-docker.nginx
+    restart: always
+    tty: true
+    depends_on:
+      - php
+    ports:
+      - "80:80"
+    volumes:
+      - .:/var/www/app
+    networks:
+      - xdebug-docker.network
